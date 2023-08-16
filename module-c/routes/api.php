@@ -1,19 +1,19 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\RestaurantsController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+Route::middleware("throttle:api")->group(function () {
+    Route::post("/login", [AuthController::class, "login"]);
+    Route::post("/register", [AuthController::class, "register"]);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    Route::middleware("auth.bearer")->group(function () {
+        Route::get("/search", [RestaurantsController::class, "search"]);
+        Route::get("/restaurant/{restaurantId}", [RestaurantsController::class, "get"]);
+        Route::post("/restaurant/{restaurantId}/review", [ReviewController::class, "create"]);
+        Route::post("/restaurant/{restaurantId}/order", [OrderController::class, "create"]);
+    });
 });
