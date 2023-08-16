@@ -33,20 +33,7 @@ services:
 
   # API - api.localhost
   api:
-    build:
-      context: module-c
-      dockerfile: Dockerfile
-    volumes:
-      - ./module-c/app:/app/app
-      - ./module-c/config:/app/config
-      - ./module-c/database:/app/database
-      - ./module-c/routes:/app/routes
-      - ./module-c/storage:/app/storage
-      - ./module-c/public:/app/public
-      - ./module-c/bootstrap:/app/bootstrap
-      - ./module-c/resources:/app/resources
-    env_file:
-      - module-c/.env
+    image: jani888/es2023-hu-ro-training-backend
     environment:
       WEB_DOCUMENT_ROOT: /app/public
     labels:
