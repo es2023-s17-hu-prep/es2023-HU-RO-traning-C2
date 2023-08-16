@@ -117,7 +117,14 @@ export default class RegisterPage extends React.Component {
             </div>
 
             <button className="primary-button margin-2">Register</button>
-            <button className="secondary-button">Back to Login</button>
+            <button
+              className="secondary-button"
+              onClick={() => {
+                window.location = "/login";
+              }}
+            >
+              Back to Login
+            </button>
           </form>
         </div>
         <div className="banner">
