@@ -1,0 +1,295 @@
+openapi: 3.0.0
+info:
+  title: Restaurant Services API
+  description: APIs related to various restaurant services.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5001
+    description: Restaurant Service
+  - url: http://localhost:5002
+    description: Menu Service
+  - url: http://localhost:5003
+    description: Reservation Service
+  - url: http://localhost:5004
+    description: Review Service
+  - url: http://localhost:5005
+    description: Order Service
+  - url: http://localhost:5006
+    description: User Service
+  - url: http://localhost:5000
+    description: Management Service
+
+paths:
+  # For Restaurant Service
+  /restaurants:
+    get:
+      summary: Get restaurant info by ID or all restaurants
+      servers:
+        - url: http://localhost:5001
+      parameters:
+        - name: restaurant_id
+          in: query
+          description: Restaurant ID (optional)
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Restaurant not found
+
+  # For Menu Service
+  /menu-items:
+    get:
+      summary: Get menu items by restaurant ID
+      servers:
+        - url: http://localhost:5002
+      parameters:
+        - name: restaurant_id
+          in: query
+          description: Restaurant ID
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Successful operation
+
+  # For Reservation Service
+  /reservation-details:
+    get:
+      summary: Get reservation details by restaurant ID
+      servers:
+        - url: http://localhost:5003
+      parameters:
+        - name: restaurant_id
+          in: query
+          description: Restaurant ID
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Successful operation
+
+    post:
+      summary: Create a new reservation
+      servers:
+        - url: http://localhost:5003
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                restaurant_id:
+                  type: number
+                  description: Restaurant ID
+                name:
+                  type: string
+                  description: Name
+                date:
+                  type: string
+                  description: Date
+                time:
+                  type: string
+                  description: Time
+                people:
+                  type: number
+                  description: Number of people
+                phone:
+                  type: string
+                  description: Phone number
+                email:
+                  type: string
+                  description: Email
+      responses:
+        '201':
+          description: Reservation created
+
+  # For Review Service
+  /reviews:
+    get:
+      summary: Get reviews by restaurant ID
+      servers:
+        - url: http://localhost:5004
+      parameters:
+        - name: restaurant_id
+          in: query
+          description: Restaurant ID
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Successful operation
+
+    post:
+      summary: Create a new review
+      servers:
+        - url: http://localhost:5004
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                restaurant_id:
+                  type: number
+                  description: Restaurant ID
+                name:
+                  type: string
+                  description: Name
+                date:
+                  type: string
+                  description: Date
+                rating:
+                  type: number
+                  description: Rating
+                comments:
+                  type: string
+                  description: Comments
+      responses:
+        '201':
+          description: Review created
+
+  # For Order Service
+  /orders:
+    get:
+      summary: Get orders by restaurant ID
+      servers:
+        - url: http://localhost:5005
+      parameters:
+        - name: restaurant_id
+          in: query
+          description: Restaurant ID
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Successful operation
+
+    post:
+      summary: Create a new order
+      servers:
+        - url: http://localhost:5005
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                restaurant_id:
+                  type: number
+                  description: Restaurant ID
+                user_id:
+                  type: number
+                  description: User ID
+                date:
+                  type: string
+                  description: Date
+                order_items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      menuId: 
+                        type: number
+                        description: Menu ID
+                      quantity:
+                        type: number
+                        description: Quantity of the ordered item
+                  description: Order items
+      responses:
+        '201':
+          description: Order created
+
+  # For User Service
+  /authenticate:
+    post:
+      summary: Authenticate a user and return JWT
+      servers:
+        - url: http://localhost:5006
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: User Email
+                password:
+                  type: string
+                  description: User Password
+      responses:
+        '200':
+          description: Authenticated
+        '401':
+          description: Invalid credentials
+
+  /register:
+    post:
+      summary: Create a new user
+      description: Create a new user
+      servers:
+        - url: http://localhost:5006
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: User name
+                email:
+                  type: string
+                  description: User Email
+                password:
+                  type: string
+                  description: User Password
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: number
+                  name:
+                    type: string
+                  email:
+                    type: string
+        '400':
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+# For Management Service
+  /reset-db:
+    post:
+      summary: Reset the database
+      servers:
+        - url: http://localhost:5000
+      responses:
+        '200':
+          description: Database reset
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
