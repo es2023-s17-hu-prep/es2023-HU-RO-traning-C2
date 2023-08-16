@@ -14,21 +14,20 @@ return [
     |
     */
 
-    'mailgun' => [
-        'domain' => env('MAILGUN_DOMAIN'),
-        'secret' => env('MAILGUN_SECRET'),
-        'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
-        'scheme' => 'https',
+    'user' => [
+        'baseUrl' => 'http://unsecure:5006'
     ],
-
-    'postmark' => [
-        'token' => env('POSTMARK_TOKEN'),
+    'order' => [
+        'baseUrl' => 'http://unsecure:5005'
     ],
-
-    'ses' => [
-        'key' => env('AWS_ACCESS_KEY_ID'),
-        'secret' => env('AWS_SECRET_ACCESS_KEY'),
-        'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+    'review' => [
+        'baseUrl' => 'http://unsecure:5004'
     ],
+    'menu' => [
+        'baseUrl' => 'http://unsecure:5002'
+    ],
+    'restaurant' => [
+        'baseUrl' => 'http://unsecure:5001'
+    ]
 
 ];

@@ -29,6 +29,7 @@ services:
       - 5003:5003
       - 5004:5004
       - 5005:5005
+      - 5006:5006
 
   # API - api.localhost
   api:
@@ -52,13 +53,3 @@ services:
       traefik.enable: "true"
       traefik.http.routers.api.rule: HostRegexp(`{_:api\..*}`)
       traefik.http.services.api.loadbalancer.server.port: 80
-
-  # GUEST WEBSITE - guest.localhost
-  guest:
-    build:
-      context: module-d
-      dockerfile: Dockerfile
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.guest.rule: HostRegexp(`{_:guest\..*}`)
-      traefik.http.services.guest.loadbalancer.server.port: 80
