@@ -22,15 +22,15 @@ export function RestaurantPage() {
     const [restaurant, setRestaurant] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    async function load(){
+    async function load() {
         setLoading(true)
         const result = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/restaurant/${id}`, {headers})
         setRestaurant(result.data);
         setLoading(false)
     }
 
-    async function saveReview(data){
-        await axios.post(`${process.env.REACT_APP_BACKEND_URL}/restaurant/${id}/review`, data,  {headers})
+    async function saveReview(data) {
+        await axios.post(`${process.env.REACT_APP_BACKEND_URL}/restaurant/${id}/review`, data, {headers})
         load()
     }
 
@@ -38,7 +38,14 @@ export function RestaurantPage() {
         load()
     }, [id])
 
-    if(!restaurant) return <span className="text-gray-700 italic text-center">Loading...</span>;
+    if (!restaurant){
+        return <BaseLayout>
+            <Header/>
+            <div className="flex justify-center items-center w-full h-screen">
+                <span className="text-gray-700 italic text-center">Loading...</span>
+            </div>
+        </BaseLayout>;
+    }
 
     return <BaseLayout>
         <Header logoColor="white">
@@ -62,7 +69,8 @@ export function RestaurantPage() {
             <div className="mx-auto max-w-7xl w-full p-4 flex flex-col gap-3 box-border">
                 <h1 className="font-bold text-6xl">{restaurant.name}</h1>
                 <div className="flex flex-row gap-2 items-center">
-                    <span className="text-gray-600">{restaurant.averageRating.toFixed(2)}</span> <Rating value={Math.round(restaurant.averageRating)} readOnly />
+                    <span className="text-gray-600">{restaurant.averageRating.toFixed(2)}</span> <Rating
+                    value={Math.round(restaurant.averageRating)} readOnly/>
                 </div>
                 <p className="text-gray-600">
                     {restaurant.description}
@@ -72,18 +80,20 @@ export function RestaurantPage() {
                     <div className="flex flex-col gap-4 w-full">
                         <h2 className="text-xl font-bold">Menu</h2>
                         {
-                            restaurant.menuItems.map(item => <MenuItem variant="add" key={item.id} data={item} onClick={() => addItem(item)} />)
+                            restaurant.menuItems.map(item => <MenuItem variant="add" key={item.id} data={item}
+                                                                       onClick={() => addItem(item)}/>)
                         }
                         {
-                            restaurant.menuItems.length === 0 && <span className="text-gray-700 italic">No menu items</span>
+                            restaurant.menuItems.length === 0 &&
+                            <span className="text-gray-700 italic">No menu items</span>
                         }
                     </div>
                     <div className="flex flex-col gap-4 max-w-md w-full">
                         <h2 className="text-xl font-bold">Reviews</h2>
                         {
-                            restaurant.ratings.map(item => <Review key={item.id} data={item} />)
+                            restaurant.ratings.map(item => <Review key={item.id} data={item}/>)
                         }
-                        <ReviewForm onSubmit={saveReview} />
+                        <ReviewForm onSubmit={saveReview}/>
                         {
                             restaurant.ratings.length === 0 && <span className="text-gray-700 italic">No reviews</span>
                         }
