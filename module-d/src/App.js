@@ -1,25 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { useDineEaseContext } from "./context/DineEaseContext";
+import FinishPage from "./pages/FinishPage";
+import Index from "./pages/Index";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import RestaurantPage from "./pages/RestaurantPage";
 
-function App() {
+/**
+ * Application entrypoint
+ */
+const App = () => {
+  const { token } = useDineEaseContext();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        {/* Public routes */}
+        <Route
+          path="/login"
+          element={token ? <Navigate to="/" /> : <LoginPage />}
+        />
+        <Route
+          path="/register"
+          element={token ? <Navigate to="/" /> : <RegisterPage />}
+        />
+
+        {/* Protected routes */}
+        <Route
+          path="/"
+          element={token ? <Index /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/restaurant/:id"
+          element={token ? <RestaurantPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/finish"
+          element={token ? <FinishPage /> : <Navigate to="/login" />}
+        />
+      </Routes>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;

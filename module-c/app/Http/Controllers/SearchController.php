@@ -15,10 +15,6 @@ class SearchController extends Controller
     {
         // get the query param
         $query = $request->query('query');
-        if (!$query) {
-            info('No query parm');
-            return response()->json(['message' => 'The query param is required'], 400);
-        }
 
         // fetching the restaurants endpoint
         info('Fetching the restaurants endpoint');
@@ -35,7 +31,7 @@ class SearchController extends Controller
         return SearchResource::collection(
             $restaurantsResponse
                 ->collect()
-                ->filter(fn ($r) => str_contains(strtolower($r['name']), strtolower($query)))
+                ->filter(fn ($r) => !$query || str_contains(strtolower($r['name']), strtolower($query)))
         );
     }
 }

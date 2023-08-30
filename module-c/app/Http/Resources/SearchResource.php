@@ -32,11 +32,11 @@ class SearchResource extends JsonResource
         return $sum /= $reviewsResponse->count();
     }
 
-    public static function getVisited($id, $username)
+    public static function getVisited($id, $userId)
     {
         // fetching the reservations endpoint
         info('Fetching the reservations endpoint');
-        $reservationsResponse = Http::get('http://unsecure:5003/reservation-details?restaurant_id=' . $id);
+        $reservationsResponse = Http::get('http://unsecure:5005/orders?restaurant_id=' . $id);
 
         // fetch failed
         if ($reservationsResponse->failed()) {
@@ -45,7 +45,7 @@ class SearchResource extends JsonResource
         }
 
         // check
-        return $reservationsResponse->collect()->some(fn ($r) => $r['user_name'] == $username);
+        return $reservationsResponse->collect()->some(fn ($r) => $r['user_id'] == $userId);
     }
 
     /**
@@ -60,7 +60,7 @@ class SearchResource extends JsonResource
             'name' => $this['name'],
             'description' => $this['description'],
             'averageRating' => $this->getAverageRating($this['restaurant_id']),
-            'visited' => $this->getVisited($this['restaurant_id'], $request->user()['name']),
+            'visited' => $this->getVisited($this['restaurant_id'], $request->user()['user_id']),
         ];
     }
 }
