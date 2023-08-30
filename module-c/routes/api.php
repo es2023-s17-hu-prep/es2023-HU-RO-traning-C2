@@ -1,6 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\RestaurantController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +16,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+/**
+ * Auth endpoints
+ */
+Route::post('login', [UserController::class, 'login']);
+Route::post('register', [UserController::class, 'register']);
+
+/**
+ * Protected endpoints
+ */
+Route::middleware('auth.header')->group(function () {
+    Route::get('search', [SearchController::class, 'search']);
+
+    // restaurant endpoints
+    Route::prefix('restaurant/{id}')->group(function () {
+        Route::get('/', [RestaurantController::class, 'show']);
+        Route::post('/order', [RestaurantController::class, 'order']);
+        Route::post('/review', [RestaurantController::class, 'review']);
+    });
 });
