@@ -32,20 +32,23 @@ services:
 
   # API - api.localhost
   api:
-    image: jani888/es2023-hu-ro-training-backend
+    build:
+      context: module-c
+      dockerfile: Dockerfile
+    volumes:
+      - ./module-c/app:/app/app
+      - ./module-c/config:/app/config
+      - ./module-c/database:/app/database
+      - ./module-c/routes:/app/routes
+      - ./module-c/storage:/app/storage
+      - ./module-c/public:/app/public
+      - ./module-c/bootstrap:/app/bootstrap
+      - ./module-c/resources:/app/resources
+    env_file:
+      - module-c/.env
     environment:
       WEB_DOCUMENT_ROOT: /app/public
     labels:
       traefik.enable: "true"
       traefik.http.routers.api.rule: HostRegexp(`{_:api\..*}`)
       traefik.http.services.api.loadbalancer.server.port: 80
-
-  # GUEST WEBSITE - guest.localhost
-  guest:
-    build:
-      context: module-d
-      dockerfile: Dockerfile
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.guest.rule: HostRegexp(`{_:guest\..*}`)
-      traefik.http.services.guest.loadbalancer.server.port: 80

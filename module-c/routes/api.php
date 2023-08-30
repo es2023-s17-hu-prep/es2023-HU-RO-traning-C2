@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('login', [\App\Http\Controllers\AuthController::class, 'authenticate']);
+Route::post('register', [\App\Http\Controllers\AuthController::class, 'register']);
+
+Route::middleware('auth.api')->group(function () {
+    Route::get('search', [\App\Http\Controllers\RestaurantController::class, 'search']);
+    Route::get('restaurant/{restaurantId}', [\App\Http\Controllers\RestaurantController::class, 'show']);
+    Route::post('restaurant/{restaurantId}/review', [\App\Http\Controllers\RestaurantController::class, 'review']);
+    Route::post('restaurant/{restaurantID}/order', [\App\Http\Controllers\RestaurantController::class, 'order']);
 });
